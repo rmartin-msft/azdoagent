@@ -4,10 +4,17 @@ ENV TARGETARCH="linux-x64"
 
 RUN apt update && \
   apt upgrade -y && \
-  apt install -y curl git jq libicu74
+  apt install -y curl git jq libicu74 wget apt-transport-https gnupg2
 
 # Install Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
+dpkg -i packages-microsoft-prod.deb && \
+rm packages-microsoft-prod.deb
+RUN su && apt-get update && \ 
+ apt-get install -y dotnet-sdk-8.0 && \
+ dotnet --list-sdks
 
 WORKDIR /azp/
 
